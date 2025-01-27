@@ -1,5 +1,8 @@
 ## install
    - py -m pip install -r requirements.txt.
 
-## Start 
- "ctrl + alt + +"
+## Start/Stop
+ - "ctrl + alt + +"
+
+## Change coordinates
+ - "ctrl + alt + -"
