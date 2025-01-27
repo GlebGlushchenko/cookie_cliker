@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.eggs/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+
+# pydev
+.project
+.pydevproject
+
+# virtualenv
+.venv/
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Sphinx documentation
+docs/_build/
+
+# Local configuration files
+.env
+*.envrc
+
+# Test files
+.tox/
+.mypy_cache/
+
+# Other commonly ignored files
+*.log
+*.tmp
+Thumbs.db
+*.DS_Store

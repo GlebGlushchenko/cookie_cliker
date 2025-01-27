@@ -4,9 +4,9 @@ from threading import Timer
 from datetime import datetime
 from termcolor import colored
 import pyautogui
-import start_cookie_cliker
+# import start_cookie_cliker
 
-start_cookie_cliker.start_cookie_cliker()
+# start_cookie_cliker.start_cookie_cliker()
 
 print('👑 Кликер 1.0.0 👑')
 
