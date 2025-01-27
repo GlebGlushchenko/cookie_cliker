@@ -14,6 +14,8 @@ global_datetime = datetime.now()
 click_x, click_y = 0, 0
 stop_event = Event()
 click_lock = Lock()
+info_interval = 10  # Default info interval (seconds)
+click_interval = 0.1 # Default click interval (seconds)
 
 def repeater(interval, function):
     Timer(interval, repeater, [interval, function]).start()
@@ -45,12 +47,16 @@ def click():
             pyautogui.click(x=click_x, y=click_y)
             with click_lock:
                 click_count += 1
+            time.sleep(click_interval)
         except pyautogui.FailSafeException:
             print("Fail-safe triggered. Move your mouse.")
             stop_event.set()
+            isClicking = False
         except Exception as e:
             print(f"An error occurred: {e}")
             stop_event.set()
+            isClicking = False
+
 
 def info():
     global global_datetime
@@ -69,12 +75,10 @@ def info():
         print("\n")
         print(f"Что бы приостановить кликер нажмите: {colored("'ctrl' + 'alt' + '='", 'green')}")
 
-repeater(10, info)
-
 def get_click_coordinates():
-    if(isClicking):
+    if isClicking:
         return
-    
+
     global click_x, click_y
     print("Наведите курсор на место клика и нажмите Enter...")
     input()
@@ -83,12 +87,32 @@ def get_click_coordinates():
     print("\n")
     print(f"Что бы запустить кликер нажмите: {colored("'ctrl' + 'alt' + '='", 'green')}")
 
-keyboard.add_hotkey('ctrl+alt+-', get_click_coordinates) # Добавлено
+keyboard.add_hotkey('ctrl+alt+-', get_click_coordinates)
+
+def get_settings():
+    global info_interval, click_interval
+    while True:
+        try:
+            interval_str = input("Введите интервал обновления информации (секунды, Enter для 10): ")
+            info_interval = int(interval_str) if interval_str else 10
+            break
+        except ValueError:
+            print("Некорректный ввод. Попробуйте ещё раз.")
+
+    while True:
+        try:
+            interval_str = input("Введите интервал между кликами (секунды, Enter для 0.1): ")
+            click_interval = float(interval_str) if interval_str else 0.1
+            break
+        except ValueError:
+            print("Некорректный ввод. Попробуйте ещё раз.")
 
 if __name__ == "__main__":
+    get_settings()
     get_click_coordinates()
+    repeater(info_interval, info)
     try:
         while True:
-            time.sleep(0)
+            time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nКликер остановлен.")
