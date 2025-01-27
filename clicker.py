@@ -5,6 +5,9 @@ from threading import Timer, Thread, Event, Lock
 from datetime import datetime
 from termcolor import colored
 from tabulate import tabulate
+import start_cookie_cliker
+import os
+import platform
 
 print('👑 Кликер 1.0.0 👑')
 
@@ -91,6 +94,9 @@ keyboard.add_hotkey('ctrl+alt+-', get_click_coordinates)
 
 def get_settings():
     global info_interval, click_interval
+    print("Настройка параметров...")
+    time.sleep(5)
+    clear_console()
     while True:
         try:
             interval_str = input("Введите интервал обновления информации (секунды, Enter для 10): ")
@@ -98,6 +104,11 @@ def get_settings():
             break
         except ValueError:
             print("Некорректный ввод. Попробуйте ещё раз.")
+        except KeyboardInterrupt:
+            print("Настройка параметров прервана.")
+            return
+
+    time.sleep(0.5)
 
     while True:
         try:
@@ -106,8 +117,27 @@ def get_settings():
             break
         except ValueError:
             print("Некорректный ввод. Попробуйте ещё раз.")
+        except KeyboardInterrupt:
+            print("Настройка параметров прервана.")
+            return
+    print("Настройка завершена.")
+    clear_console()
+
+def clear_console():
+    system = platform.system()
+    if system == "Windows":
+        os.system('cls')
+    elif system in ["Linux", "Darwin"]: # Darwin - macOS
+        os.system('clear')
+    else:
+        print("Неизвестная операционная система. Очистка консоли невозможна.")
+
 
 if __name__ == "__main__":
+    answer = input("Нужно ли запустить Cookie Clicker? (yes/no): ").lower()
+    if answer == "yes":
+        start_cookie_cliker.start_cookie_cliker()
+
     get_settings()
     get_click_coordinates()
     repeater(info_interval, info)
