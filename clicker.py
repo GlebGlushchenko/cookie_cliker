@@ -25,12 +25,12 @@ def set_clicker():
         isClicking = False
         stop_event.set()
         print(colored('Кликер Отключен', 'red', attrs=['underline']))
-        global_datetime = datetime.now()  # Сбрасываем время
-        click_count = 0  # Сбрасываем счетчик кликов
+        global_datetime = datetime.now()
+        click_count = 0
     else:
         isClicking = True
         stop_event.clear()
-        global_datetime = datetime.now()  # Запоминаем время запуска
+        global_datetime = datetime.now()
         click_thread = Thread(target=click)
         click_thread.daemon = True
         click_thread.start()
@@ -64,22 +64,31 @@ def info():
             ["Количество кликов", colored(str(click_count), 'green', attrs=['underline', 'bold'])],
             ["Кликов/мин", colored(f"{clicks_per_minute:.2f}", 'yellow')]
         ]
+        print("\n")
         print(tabulate(data, headers=["Метрика", "Значение"], tablefmt="grid"))
+        print("\n")
+        print(f"Что бы приостановить кликер нажмите: {colored("'ctrl' + 'alt' + '='", 'green')}")
 
 repeater(10, info)
 
 def get_click_coordinates():
+    if(isClicking):
+        return
+    
     global click_x, click_y
     print("Наведите курсор на место клика и нажмите Enter...")
     input()
     click_x, click_y = pyautogui.position()
     print(f"Координаты клика: x={click_x}, y={click_y}")
+    print("\n")
+    print(f"Что бы запустить кликер нажмите: {colored("'ctrl' + 'alt' + '='", 'green')}")
 
+keyboard.add_hotkey('ctrl+alt+-', get_click_coordinates) # Добавлено
 
 if __name__ == "__main__":
     get_click_coordinates()
     try:
         while True:
-            time.sleep(0.1)
+            time.sleep(0)
     except KeyboardInterrupt:
         print("\nКликер остановлен.")
